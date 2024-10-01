@@ -17,6 +17,7 @@ function flatten (target, opts) {
       var value = object[key]
       var isarray = opts.safe && Array.isArray(value)
       var type = Object.prototype.toString.call(value)
+      var isObjectId = value?.constructor?.name === "ObjectId";
       var isbuffer = isBuffer(value)
       var isobject = (
         type === '[object Object]' ||
@@ -27,7 +28,7 @@ function flatten (target, opts) {
         ? prev + delimiter + key
         : key
 
-      if (!isarray && !isbuffer && isobject && Object.keys(value).length &&
+      if (!isarray && !isbuffer && !isObjectId && isobject && Object.keys(value).length &&
         (!opts.maxDepth || currentDepth < maxDepth)) {
         return step(value, newKey, currentDepth + 1)
       }
